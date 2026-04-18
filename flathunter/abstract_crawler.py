@@ -17,6 +17,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from urllib3.exceptions import ReadTimeoutError
 
 from flathunter import proxies
 from flathunter.captcha.captcha_solver import CaptchaUnsolvableError
@@ -155,6 +156,10 @@ class Crawler(ABC):
             except requests.exceptions.ConnectionError:
                 logger.warning(
                     "Connection to %s failed. Retrying.", url.split('/')[2])
+                return []
+            except ReadTimeoutError:
+                logger.warning(
+                    "ReadTimeoutError on %s. Retrying.", url.split('/')[2])
                 return []
         return []
 
