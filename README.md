@@ -64,7 +64,7 @@ With ```Flathunter```, instead of visiting the same pages on the same  sites eve
 Start by installing all dependencies inside a virtual environment using ```pipenv``` from the project's directory:
 
 ```sh
-$ pipenv install
+pipenv install
 ```
 
 (Note that the `Pipfile.lock` shipped with the project is built on a Linux x86 system and installs packages from [Pypi](https://pypi.python.org/). If you are installing on a different platform with a different package repository, you may need to update the source URL in the Pipfile to point to your python package repository, and install using `pipenv install --skip-lock` - see [#314](https://github.com/flathunters/flathunter/issues/314))
@@ -72,7 +72,7 @@ $ pipenv install
 Once the dependencies are installed, as well as every time you come back to the project in a new shell, run:
 
 ```sh
-$ pipenv shell
+pipenv shell
 ```
 
 to launch a Python environment with the dependencies that your project requires. **Now that you are inside the virtual environment, all commands you run in the shell will run with the required dependencies available**
@@ -82,19 +82,19 @@ file shipped with the project (`config.yaml.dist`), but you can also use the con
 a configuration for simple projects:
 
 ```sh
-$ python config_wizard.py
+python config_wizard.py
 ```
 
 The wizard will create a new `config.yaml` file in the current working directory that you can use to run Flathunter:
 
 ```sh
-$ python flathunt.py
+python flathunt.py
 ```
 
 **To directly run the program without entering the venv first, use:**
 
 ```sh
-$ pipenv run python flathunt.py
+pipenv run python flathunt.py
 ```
 
 ### Installation on Linux
@@ -102,31 +102,31 @@ $ pipenv run python flathunt.py
 
 First clone the repository
 ```sh
-$ cd /opt
-$ git clone https://github.com/flathunters/flathunter.git
+cd /opt
+git clone https://github.com/flathunters/flathunter.git
 ```
 add a new User and configure the permissions
 ```sh
-$ useradd -m flathunter
-$ chown flathunter:flathunter -R flathunter/
+useradd -m flathunter
+chown flathunter:flathunter -R flathunter/
 ```
 Next install pipenv for the new user
 ```sh
-$ sudo -u flathunter pip install --user pipenv
-$ cd flathunter/
-$ sudo -u flathunter /home/flathunter/.local/bin/pipenv install
+sudo -u flathunter pip install --user pipenv
+cd flathunter/
+sudo -u flathunter /home/flathunter/.local/bin/pipenv install
 ```
 Next configure the config file and service file to your liking. Then move the service file in place:
 ```sh
-$ mv flathunter/sample-flathunter.service /lib/systemd/system/flathunter.service
+mv flathunter/sample-flathunter.service /lib/systemd/system/flathunter.service
 ```
 At last you just have to start flathunter
 ```sh
-$ systemctl enable flathunter --now
+systemctl enable flathunter --now
 ```
 If you're using SELinux the following policy needs to be added:
 ```sh
-$ chcon -R -t bin_t /home/flathunter/.local/bin/pipenv
+chcon -R -t bin_t /home/flathunter/.local/bin/pipenv
 ```
 
 ## Usage
@@ -139,7 +139,7 @@ and `telegram` sections will allow you to run Flathunter. Alternatively, you can
 to generate a basic configuration:
 
 ```sh
-$ python config_wizard.py
+python config_wizard.py
 ```
 
 #### URLs
@@ -159,7 +159,7 @@ To be able to send messages to you over Telegram, you need to register a new bot
 To know who should Telegram messages should be sent to, the "Chat IDs" of the recipients must be added to the config file under `receiver_ids`. To work out your own Chat ID, send a message to your new bot, then run:
 
 ```
-$ curl https://api.telegram.org/bot[BOT-TOKEN]/getUpdates
+curl https://api.telegram.org/bot[BOT-TOKEN]/getUpdates
 ```
 
 to get list of messages the Bot has received. You will see your Chat ID in there.
@@ -223,7 +223,7 @@ optional arguments:
 You can alternatively launch the web interface by running the `main.py` application:
 
 ```
-$ python main.py
+python main.py
 ```
 
 This uses the same config file as the Command-line Interface, and launches a web page at [http://localhost:8080](http://localhost:8080).
@@ -231,7 +231,7 @@ This uses the same config file as the Command-line Interface, and launches a web
 Alternatively, run the server directly with Flask:
 
 ```
-$ FLASK_APP=flathunter.web flask run
+FLASK_APP=flathunter.web flask run
 ```
 
 ### Docker
@@ -258,13 +258,13 @@ docker compose up
 First build the image inside the project's root directory:
 
 ```sh
-$ docker build -t flathunter .
+docker build -t flathunter .
 ```
 
 **When running a container using the image, a config file needs to be mounted on the container at `/config.yaml` or configuration has to be supplied using environment variables.** The example below provides the file `config.yaml` off the current working directory:
 
 ```sh
-$ docker run --mount type=bind,source=$PWD/config.yaml,target=/config.yaml flathunter python flathunt.py -c /config.yaml
+docker run --mount type=bind,source=$PWD/config.yaml,target=/config.yaml flathunter python flathunt.py -c /config.yaml
 ```
 
 #### Environment Configuration
@@ -303,13 +303,13 @@ To make deployment with docker easier, most of the important configuration optio
 You can run `Flathunter` on Google's App Engine, in the free tier, at no cost if you don't need captcha solving. If you need to solve captchas, you can use Google Cloud Run as described later. To get started, first install the [Google Cloud SDK](https://cloud.google.com/sdk/docs) on your machine, and run:
 
 ```
-$ gcloud init
+gcloud init
 ```
 
 to setup the SDK. You will need to create a new cloud project (or connect to an existing project). The Flathunters organisation uses the `flathunters` project ID to deploy the application. If you need access to deploy to that project, contact the maintainers.
 
 ```
-$ gcloud config set project flathunters
+gcloud config set project flathunters
 ```
 
 You will need to provide the project ID to the configuration file `config.yaml` as value to the key `google_cloud_project_id` or in the `FLATHUNTER_GOOGLE_CLOUD_PROJECT_ID` environment variable.
@@ -323,7 +323,7 @@ If the Pipfile has been updated, you will need to remove the line `pkg-resources
 To deploy the app to Google App Engine, run:
 
 ```
-$ gcloud app deploy
+gcloud app deploy
 ```
 
 Your project will need to have the [Cloud Build API](https://console.developers.google.com/apis/api/cloudbuild.googleapis.com/overview) enabled, which requires it to be linked to a billing-enabled account. It also needs [Cloud Firestore API](https://console.cloud.google.com/apis/library/firestore.googleapis.com) to be enabled for the project. Firestore needs to be configured in [Native mode](https://cloud.google.com/datastore/docs/upgrade-to-firestore).
@@ -331,7 +331,7 @@ Your project will need to have the [Cloud Build API](https://console.developers.
 Instead of running with a timer, the web interface depends on periodic calls to the `/hunt` URL to trigger searches (this avoids the need to have a long-running process in the on-demand compute environment). You can configure Google Cloud to automatically hit the URL by deploying the cron job:
 
 ```
-$ gcloud app deploy cron.yaml
+gcloud app deploy cron.yaml
 ```
 
 #### Google Cloud Run Deployment
@@ -369,13 +369,13 @@ Because the image uses Firestore to read details of user notification preference
 The test suite can be run with `pytest`:
 
 ```sh
-$ pytest
+pytest
 ```
 
 from the project root. If you encounter the error `ModuleNotFoundError: No module named 'flathunter'`, run:
 
 ```sh
-$ pip install -e .
+pip install -e .
 ```
 
 to make the current project visible to your pip environment.
