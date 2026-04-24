@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 """Schemas for Immobilienscout crawler"""
-from typing import Any, ClassVar, Literal
+from typing import Any, ClassVar, Literal, Optional, List
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -56,28 +58,28 @@ class ImmoscoutQuery(BaseModel):
 
     model_config = ConfigDict(serialize_by_alias=True)
 
-    apartmenttypes: list[str] | None = Field(title="Wohnungstyp", default=None)
-    constructionyear: str | None = Field(title="Baujahr", default=None)
-    energyefficiencyclasses: list[str] | None = Field(title="Energieeffizienzklasse", default=None)
-    equipment: list[str] | None = Field(title="Ausstattung", default=None)
-    exclusioncriteria: list[str] | None = Field(title="Objektart", default=None)
-    floor: str | None = Field(title="Etage", default=None)
-    geocodes: str | None = Field(
+    apartmenttypes: Optional[List[str]] = Field(title="Wohnungstyp", default=None)
+    constructionyear: Optional[str] = Field(title="Baujahr", default=None)
+    energyefficiencyclasses: Optional[List[str]] = Field(title="Energieeffizienzklasse", default=None)
+    equipment: Optional[List[str]] = Field(title="Ausstattung", default=None)
+    exclusioncriteria: Optional[List[str]] = Field(title="Objektart", default=None)
+    floor: Optional[str] = Field(title="Etage", default=None)
+    geocodes: Optional[str] = Field(
         description="Path following '/Suche/' up to second to last element", default=None
     )
-    geocoordinates: str | None = Field(
+    geocoordinates: Optional[str] = Field(
         description="Geocoordinates for radius-based search", default=None
     )
-    haspromotion: bool | None = Field(title="Wohnberechtigungsschein (WBS)", default=None)
-    heatingtypes: list[str] | None = Field(title="Heizungsart", default=None)
-    livingspace: str | None = Field(title="Wohnfläche in m²", default=None)
-    minimuminternetspeed: int | None = Field(title="Internetgeschwindigkeit", default=None)
-    newbuilding: bool | None = Field(title="Neubau", default=None)
-    numberofrooms: str | None = Field(title="Zimmer", default=None)
+    haspromotion: Optional[bool] = Field(title="Wohnberechtigungsschein (WBS)", default=None)
+    heatingtypes: Optional[List[str]] = Field(title="Heizungsart", default=None)
+    livingspace: Optional[str] = Field(title="Wohnfläche in m²", default=None)
+    minimuminternetspeed: Optional[int] = Field(title="Internetgeschwindigkeit", default=None)
+    newbuilding: Optional[bool] = Field(title="Neubau", default=None)
+    numberofrooms: Optional[str] = Field(title="Zimmer", default=None)
     pagenumber: int = Field(title="Page number", default=1)
     pagesize: int = Field(description="Results per page", default=20)
-    petsallowedtypes: list[str] | None = Field(title="Haustiere", default=None)
-    price: str | None = Field(title="Kalt/Warmmiete in €", default=None)
+    petsallowedtypes: Optional[List[str]] = Field(title="Haustiere", default=None)
+    price: Optional[str] = Field(title="Kalt/Warmmiete in €", default=None)
     pricetype: Literal["calculatedtotalrent", "rentpermonth"] = Field(
         description="Warm or net rent", default="rentpermonth"
     )

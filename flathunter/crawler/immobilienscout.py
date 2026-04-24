@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 """Expose crawler for ImmobilienScout"""
 import re
+from typing import Optional
 from urllib.parse import urlencode, urlparse, parse_qs
 
 import requests
@@ -75,7 +78,7 @@ class Immobilienscout(Crawler):
                 query_dict[k] = ",".join(v)
         return api_url + urlencode(query_dict)
 
-    def fetch_api_data(self, search_url: str, page_no: int | None = None) -> requests.Response:
+    def fetch_api_data(self, search_url: str, page_no: Optional[int] = None) -> requests.Response:
         """Applies a page number to a formatted API URL and fetches the exposes at that page"""
 
         data = {
@@ -129,7 +132,7 @@ class Immobilienscout(Crawler):
         logger.debug('Number of entries found: %d', len(entries))
         return entries
 
-    def get_results(self, search_url: str, max_pages: int | None = None) -> list:
+    def get_results(self, search_url: str, max_pages: Optional[int] = None) -> list:
         """Fetches the exposes from the ImmoScout mobile API, starting at the provided URL"""
         query = self.get_immoscout_query(search_url)
         api_url = self.compose_api_url(query)

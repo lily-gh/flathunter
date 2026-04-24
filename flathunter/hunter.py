@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 """Default Flathunter implementation for the command line"""
 import traceback
 from itertools import chain
+from typing import Optional
 import requests
 
 from flathunter.logging import logger
@@ -36,7 +39,7 @@ class Hunter:
                        for searcher in self.config.searchers()
                        for url in self.config.target_urls()])
 
-    def hunt_flats(self, max_pages: None|int = None):
+    def hunt_flats(self, max_pages: Optional[int] = None):
         """Crawl, process and filter exposes"""
         filter_set = Filter.builder() \
                            .read_config(self.config) \
