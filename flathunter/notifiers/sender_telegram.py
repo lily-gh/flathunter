@@ -2,6 +2,7 @@
 import json
 import time
 from typing import List, Dict, Optional
+from urllib.parse import quote
 
 import requests
 
@@ -167,13 +168,22 @@ class SenderTelegram(Processor, Notifier):
         :return: str
         """
 
-        return self.config.message_format().format(
+        address = expose.get('address', 'N/A')
+        formatted_message = self.config.message_format().format(
             crawler=expose.get('crawler', 'N/A'),
             title=expose.get('title', 'N/A'),
             rooms=expose.get('rooms', 'N/A'),
             size=expose.get('size', 'N/A'),
             price=expose.get('price', 'N/A'),
             url=expose.get('url', 'N/A'),
-            address=expose.get('address', 'N/A'),
+            address=address,
             durations=expose.get('durations', 'N/A')
         ).strip()
+
+        if address and address != 'N/A':
+            location = address.replace(" ", "+")
+            google_maps_url = f"https://www.google.com/maps/search/?api=1&query={quote(location, safe='')}"
+            maps_link = f"[(view on google maps)]({google_maps_url})"
+            formatted_message = formatted_message.replace(address, f"{address}\n{maps_link}", 1)
+
+        return formatted_message

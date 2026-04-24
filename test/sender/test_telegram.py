@@ -1,6 +1,7 @@
 import json
 import unittest
 import datetime
+from urllib.parse import parse_qs
 
 from requests_mock import Mocker
 from test.utils.request_matcher import RequestCounter
@@ -113,3 +114,31 @@ class SenderTelegramTest(unittest.TestCase):
         self.assertEqual(None, sender.notify("result"), "Expected no message to be sent")
         after = datetime.datetime.now()
         self.assertEqual(2, (after - before).seconds)
+
+    @Mocker()
+    def test_send_message_includes_google_maps_link_after_address(self, m: Mocker):
+        c = StringConfig(string=json.dumps(
+            {
+                "telegram": {"bot_token": "dummy_token", "receiver_ids": [1234567]},
+                "message": "{address}"
+            }
+        ))
+        sender = SenderTelegram(config=c)
+
+        dummy_expose = {
+            "title": "dummy title for test",
+            "address": "Main Street 1 Berlin"
+        }
+
+        mock_response = '''{
+            "ok":true,
+            "result":{"message_id":456}
+        }'''
+
+        m.post('https://api.telegram.org/botdummy_token/sendMessage', text=mock_response)
+
+        sender.process_expose(expose=dummy_expose)
+
+        request_body = parse_qs(m.request_history[0].text)
+        text = request_body["text"][0]
+        self.assertIn("Main Street 1 Berlin\n[(view on google maps)](https://www.google.com/maps/search/?api=1&query=Main%2BStreet%2B1%2BBerlin)", text)
